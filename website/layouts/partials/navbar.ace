@@ -3,8 +3,15 @@ nav.hn-top-navbar.navbar.navbar-inverse.navbar-fixed-top role=navigation
     .navbar-header
       button.navbar-toggle.collapsed type=button data-toggle=collapse data-target=#hn-navbar aria-controls=hn-navbar aria-expanded=false
         span.sr-only
-          Toggle navigation
+          Toggle main navigation
         i.hn-toggle-button.fa.fa-bars
+      {{- if eq .Section "docs" }}
+      button.navbar-toggle.collapsed type=button data-toggle=collapse data-target=#hn-docs-navbar aria-controls=hn-docs-navbar aria-expanded=false
+        span.sr-only
+          Toggle documentation navigation
+        i.hn-toggle-button.fa.fa-file-word-o
+      {{- end }}
+        
 
       a.hn-navbar-logo.navbar-brand href=/
         img.pull-left src={{.Site.Params.assets.textLogoSmall}}
@@ -24,3 +31,17 @@ nav.hn-top-navbar.navbar.navbar-inverse.navbar-fixed-top role=navigation
         li
           a.nav-icon href={{.Site.Params.social.twitter}}
             i.fa.fa-twitter
+      
+    {{- if eq .Section "docs" }}
+    #hn-docs-navbar.hn-docs-dropdown.collapse
+      ul.nav.navbar-nav.navbar-right
+        {{- range .Site.Data.toc.sections }}
+        .hn-docs-dropdown-section
+          h4 {{ .name }}
+          ul
+            {{- range .sublinks }}
+            li
+              a href={{.url}} {{.name}}
+            {{- end }}
+        {{- end }}
+    {{- end }}

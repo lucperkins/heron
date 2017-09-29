@@ -149,6 +149,22 @@ aside.hn-sidebar {
   }
 }
 
+.hn-docs-dropdown {
+  margin: 5%;
+
+  h4 {
+    color: $light-gray;
+  }
+
+  .hn-docs-dropdown-section {
+    margin-bottom: 1.5rem;
+
+    ul {
+      margin-left: -30px;
+    }
+  }
+}
+
 // Hide sidebar for mobile, show later
 @media (min-width: 768px) {
   .hn-sidebar {
