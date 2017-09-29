@@ -75,8 +75,42 @@ a:hover {
     font-size: 16px;
   }
 
-  i.hn-toggle-button {
-    color: $light-gray;
+  .navbar-toggle {
+    background-color: $light-gray;
+
+    i.hn-toggle-button {
+      color: $heron-blue-gray;
+    }
+
+    &:hover, &:focus {
+      background-color: $heron-blue-green;
+
+      i.hn-toggle-button {
+        color: $light-gray;
+      }
+    }
+  }
+
+  .hn-docs-dropdown {
+    h4 {
+      color: $light-gray;
+    }
+  
+    .hn-docs-dropdown-section {
+      margin-bottom: 1.5rem;
+  
+      ul {
+        margin-left: -30px;
+  
+        li {
+          font-size: $base-font-size * .8;
+
+          a:hover {
+            color: lighten($heron-blue-green, 15%);
+          }
+        }
+      }
+    }
   }
 }
 
@@ -145,22 +179,6 @@ aside.hn-sidebar {
           }
         }
       }
-    }
-  }
-}
-
-.hn-docs-dropdown {
-  margin: 5%;
-
-  h4 {
-    color: $light-gray;
-  }
-
-  .hn-docs-dropdown-section {
-    margin-bottom: 1.5rem;
-
-    ul {
-      margin-left: -30px;
     }
   }
 }
