@@ -17,9 +17,9 @@ package com.twitter.heron.streamlet;
 import com.twitter.heron.streamlet.impl.BuilderImpl;
 
 /**
- * Builder is used to register all sources. Builder thus keeps track
- * of all the starting points of the computation dag and uses this
- * information to build the topology
+ * A Builder is used to register all sources. Builders thus keep track
+ * of all starting points for the computation DAG and use this
+ * information to build the topology.
  */
 public interface Builder {
   static Builder createBuilder() {
@@ -27,33 +27,34 @@ public interface Builder {
   }
 
   /**
-   * All sources of the computation should register using addSource.
+   * All sources of the computation need to be registered using addSource,
+   * which can be called as many times as necessary on a single Builder.
    * @param supplier The supplier function that is used to create the streamlet
    */
   <R> Streamlet<R> newSource(SerializableSupplier<R> supplier);
 
   /**
-   * Same as above except returns KVStreamlet
+   * Same as newSource except returns a KVStreamlet rather than a Streamlet
    * @param supplier
-   * @param <K>
-   * @param <V>
+   * @param <K> The type of the KVStreamlet's key
+   * @param <V> The type of the KVStreamlet's value
    * @return
    */
   <K, V> KVStreamlet<K, V> newKVSource(SerializableSupplier<KeyValue<K, V>> supplier);
 
   /**
-   * Creates a new Streamlet using the underlying generator
-   * @param generator The generator that generates the tuples of the streamlet
-   * @param <R>
+   * Creates a new Streamlet using the underlying generator (Builder).
+   * @param generator The generator that provides the elements of the streamlet
+   * @param <R> The Streamlet's data type
    * @return
    */
   <R> Streamlet<R> newSource(Source<R> generator);
 
   /**
-   * Same as above except returns a KVStreamlet
-   * @param generator The genertor that generates the tuples of the streamlet
-   * @param <K>
-   * @param <V>
+   * Same as newSource except returns a KVStreamlet.
+   * @param generator The generator that provides the elements of the streamlet
+   * @param <K> The type of the KVStreamlet's key
+   * @param <V> The type of the KVStreamlet's value
    * @return
    */
   <K, V> KVStreamlet<K, V> newKVSource(Source<KeyValue<K, V>> generator);

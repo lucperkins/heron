@@ -19,10 +19,10 @@ import java.io.Serializable;
 import com.twitter.heron.common.basics.ByteAmount;
 
 /**
- * Config is the way users configure the execution of the topology.
- * Things like tuple delivery semantics, resources used, as well as
- * user defined key/value pairs are passed on to the runner via
- * this class.
+ * Config enables users to configure the execution of the topology.
+ * Things like delivery semantics, resources usage, and
+ * user-defined key/value pairs are passed on to the topology's Runner
+ * via this class.
  */
 public final class Config implements Serializable {
   private static final long serialVersionUID = 6204498077403076352L;
@@ -46,7 +46,8 @@ public final class Config implements Serializable {
   }
 
   /**
-   * Sets the delivery semantics of the topology
+   * Sets the delivery semantics of the topology (at least once, at most once,
+   * or effectively once).
    * @param semantic The delivery semantic to be enforced
    */
   public void setDeliverySemantics(DeliverySemantics semantic) {
@@ -54,16 +55,16 @@ public final class Config implements Serializable {
   }
 
   /**
-   * Sets the number of containers to run this topology
-   * @param numContainers The number of containers to distribute this topology
+   * Sets the number of containers that the topology will use.
+   * @param numContainers The number of containers for the topology
    */
   public void setNumContainers(int numContainers) {
     heronConfig.setNumStmgrs(numContainers);
   }
 
   /**
-   * Sets resources used per container by this topology
-   * @param resource The resource per container to dedicate per container
+   * Sets resources used by this topology (on a per-container basis).
+   * @param resource The resources to dedicate to each container
    */
   public void setContainerResources(Resources resource) {
     heronConfig.setContainerCpuRequested(resource.getCpu());
@@ -71,9 +72,9 @@ public final class Config implements Serializable {
   }
 
   /**
-   * Sets some user defined key value mapping
-   * @param key The user defined key
-   * @param value The user defined object
+   * Sets a user-defined key/value config.
+   * @param key The user-defined key
+   * @param value The user-defined value (which can be of any type)
    */
   public void setUserConfig(String key, Object value) {
     heronConfig.put(key, value);
