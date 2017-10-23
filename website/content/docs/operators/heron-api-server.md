@@ -2,7 +2,9 @@
 title: The Heron API server
 ---
 
-The **Heron API server** is a necessary component
+The **Heron API server** is a necessary component of any Heron cluster. The [Heron CLI tool](../heron-cli) interacts with the Heron API server to manage Heron [topologies](../../concepts/topologies).
+
+For more information about the Heron API server from an architectural perspective, see [this doc](../../concepts/architecture#heron-api-server).
 
 > If you're running Heron [locally](../../getting-started) on your laptop, you won't need to run the Heron API server separately; its functions will be handled automatically.
 
