@@ -57,6 +57,24 @@ sections:
         url: /docs/operators/deployment/configuration
       - name: The Heron API server
         url: /docs/operators/heron-api-server
+      - name: Kubernetes on Minikube
+        url: /docs/operators/deployment/schedulers/kubernetes#minikube
+      - name: Kubernetes on Google Container Engine
+        url: /docs/operators/deployment/schedulers/kubernetes#google-container-engine
+      - name: General Kubernetes clusters
+        url: /docs/operators/deployment/schedulers/kubernetes#general-kubernetes-clusters
+      - name: Aurora Cluster
+        url: /docs/operators/deployment/schedulers/aurora
+      - name: Local Cluster
+        url: /docs/operators/deployment/schedulers/local
+#      - name: Mesos Cluster
+#        url: /docs/operators/deployment/schedulers/mesos
+      - name: Mesos Cluster Locally
+        url: /docs/operators/deployment/schedulers/mesos-local-mac
+      - name: Slurm Cluster
+        url: /docs/operators/deployment/schedulers/slurm
+      - name: YARN Cluster
+        url: /docs/operators/deployment/schedulers/yarn
   - name: State Managers
     sublinks:
       - name: Zookeeper
@@ -73,22 +91,6 @@ sections:
         url: /docs/operators/deployment/uploaders/s3
       - name: Secure Copy (SCP)
         url: /docs/operators/deployment/uploaders/scp
-  - name: Schedulers
-    sublinks:
-      - name: Kubernetes
-        url: /docs/operators/deployment/schedulers/kubernetes
-      - name: Aurora Cluster
-        url: /docs/operators/deployment/schedulers/aurora
-      - name: Local Cluster
-        url: /docs/operators/deployment/schedulers/local
-#      - name: Mesos Cluster
-#        url: /docs/operators/deployment/schedulers/mesos
-      - name: Mesos Cluster Locally
-        url: /docs/operators/deployment/schedulers/mesos-local-mac
-      - name: Slurm Cluster
-        url: /docs/operators/deployment/schedulers/slurm
-      - name: YARN Cluster
-        url: /docs/operators/deployment/schedulers/yarn
   - name: Cluster Configuration
     sublinks:
       - name: Overview
