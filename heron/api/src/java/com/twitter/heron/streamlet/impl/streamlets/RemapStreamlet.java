@@ -31,28 +31,22 @@ import com.twitter.heron.streamlet.impl.operators.MapOperator;
  * users to choose which destination shards every transformed element can go.
  */
 public class RemapStreamlet<R> extends StreamletImpl<R> {
-  private StreamletImpl<R> parent;
   private SerializableBiFunction<? super R, Integer, List<Integer>> remapFn;
 
   public RemapStreamlet(StreamletImpl<R> parent,
                         SerializableBiFunction<? super R, Integer, List<Integer>> remapFn) {
-    this.parent = parent;
+    super(parent);
     this.remapFn = remapFn;
     setNumPartitions(parent.getNumPartitions());
   }
 
   @Override
   public boolean doBuild(TopologyBuilder bldr, Set<String> stageNames) {
-    if (getName() == null) {
-      setName(defaultNameCalculator("remap", stageNames));
-    }
-    if (stageNames.contains(getName())) {
-      throw new RuntimeException("Duplicate Names");
-    }
+    setDefaultNameIfNone("remap", stageNames);
     stageNames.add(getName());
     bldr.setBolt(getName(), new MapOperator<R, R>((a) -> a),
         getNumPartitions())
-        .customGrouping(parent.getName(), new RemapCustomGrouping<R>(remapFn));
+        .customGrouping(this.getParent().getName(), new RemapCustomGrouping<R>(remapFn));
     return true;
   }
 }

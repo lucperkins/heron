@@ -28,27 +28,21 @@ import com.twitter.heron.streamlet.impl.operators.TransformOperator;
  * for the users to setup things and cleanup before the beginning of the computation
  */
 public class TransformStreamlet<R, T> extends StreamletImpl<T> {
-  private StreamletImpl<R> parent;
   private SerializableTransformer<? super R, ? extends T> serializableTransformer;
 
   public TransformStreamlet(StreamletImpl<R> parent,
                        SerializableTransformer<? super R, ? extends T> serializableTransformer) {
-    this.parent = parent;
+    super(parent);
     this.serializableTransformer = serializableTransformer;
     setNumPartitions(parent.getNumPartitions());
   }
 
   @Override
   public boolean doBuild(TopologyBuilder bldr, Set<String> stageNames) {
-    if (getName() == null) {
-      setName(defaultNameCalculator("transform", stageNames));
-    }
-    if (stageNames.contains(getName())) {
-      throw new RuntimeException("Duplicate Names");
-    }
+    setDefaultNameIfNone("transform", stageNames);
     stageNames.add(getName());
     bldr.setBolt(getName(), new TransformOperator<R, T>(serializableTransformer),
-        getNumPartitions()).shuffleGrouping(parent.getName());
+        getNumPartitions()).shuffleGrouping(this.getParent().getName());
     return true;
   }
 }

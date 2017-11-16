@@ -27,26 +27,20 @@ import com.twitter.heron.streamlet.impl.sinks.ConsumerSink;
  * by the user passed consumer function, nothing is emitted, thus this streamlet is empty.
  */
 public class ConsumerStreamlet<R> extends StreamletImpl<R> {
-  private StreamletImpl<R> parent;
   private SerializableConsumer<R> consumer;
 
   public ConsumerStreamlet(StreamletImpl<R> parent, SerializableConsumer<R> consumer) {
-    this.parent = parent;
+    super(parent);
     this.consumer = consumer;
     setNumPartitions(parent.getNumPartitions());
   }
 
   @Override
   public boolean doBuild(TopologyBuilder bldr, Set<String> stageNames) {
-    if (getName() == null) {
-      setName(defaultNameCalculator("consumer", stageNames));
-    }
-    if (stageNames.contains(getName())) {
-      throw new RuntimeException("Duplicate Names");
-    }
+    setDefaultNameIfNone("consumer", stageNames);
     stageNames.add(getName());
     bldr.setBolt(getName(), new ConsumerSink<>(consumer),
-        getNumPartitions()).shuffleGrouping(parent.getName());
+        getNumPartitions()).shuffleGrouping(this.getParent().getName());
     return true;
   }
 }

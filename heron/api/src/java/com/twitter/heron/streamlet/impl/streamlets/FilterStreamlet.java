@@ -26,26 +26,20 @@ import com.twitter.heron.streamlet.impl.operators.FilterOperator;
  * the parent Streamlet after applying a user supplied filter function.
  */
 public class FilterStreamlet<R> extends StreamletImpl<R> {
-  private StreamletImpl<R> parent;
   private SerializablePredicate<? super R> filterFn;
 
   public FilterStreamlet(StreamletImpl<R> parent, SerializablePredicate<? super R> filterFn) {
-    this.parent = parent;
+    super(parent);
     this.filterFn = filterFn;
     setNumPartitions(parent.getNumPartitions());
   }
 
   @Override
   public boolean doBuild(TopologyBuilder bldr, Set<String> stageNames) {
-    if (getName() == null) {
-      setName(defaultNameCalculator("filter", stageNames));
-    }
-    if (stageNames.contains(getName())) {
-      throw new RuntimeException("Duplicate Names");
-    }
+    setDefaultNameIfNone("filter", stageNames);
     stageNames.add(getName());
     bldr.setBolt(getName(), new FilterOperator<R>(filterFn),
-        getNumPartitions()).shuffleGrouping(parent.getName());
+        getNumPartitions()).shuffleGrouping(this.getParent().getName());
     return true;
   }
 }

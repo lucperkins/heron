@@ -36,7 +36,6 @@ import com.twitter.heron.streamlet.impl.operators.ReduceByKeyAndWindowOperator;
  */
 public class ReduceByKeyAndWindowStreamlet<K, V, R>
     extends StreamletImpl<KeyValue<KeyedWindow<K>, V>> {
-  private StreamletImpl<R> parent;
   private SerializableFunction<R, K> keyExtractor;
   private SerializableFunction<R, V> valueExtractor;
   private WindowConfigImpl windowCfg;
@@ -47,7 +46,7 @@ public class ReduceByKeyAndWindowStreamlet<K, V, R>
                        SerializableFunction<R, V> valueExtractor,
                        WindowConfig windowCfg,
                        SerializableBinaryOperator<V> reduceFn) {
-    this.parent = parent;
+    super(parent);
     this.keyExtractor = keyExtractor;
     this.valueExtractor = valueExtractor;
     this.windowCfg = (WindowConfigImpl) windowCfg;
@@ -57,18 +56,13 @@ public class ReduceByKeyAndWindowStreamlet<K, V, R>
 
   @Override
   public boolean doBuild(TopologyBuilder bldr, Set<String> stageNames) {
-    if (getName() == null) {
-      setName(defaultNameCalculator("reduceByKeyAndWindow", stageNames));
-    }
-    if (stageNames.contains(getName())) {
-      throw new RuntimeException("Duplicate Names");
-    }
+    setDefaultNameIfNone("reduceByKeyAndWindow", stageNames);
     stageNames.add(getName());
     ReduceByKeyAndWindowOperator<K, V, R> bolt = new ReduceByKeyAndWindowOperator<>(keyExtractor,
         valueExtractor, reduceFn);
     windowCfg.attachWindowConfig(bolt);
     bldr.setBolt(getName(), bolt, getNumPartitions())
-        .customGrouping(parent.getName(),
+        .customGrouping(this.getParent().getName(),
             new ReduceByKeyAndWindowCustomGrouping<K, R>(keyExtractor));
     return true;
   }

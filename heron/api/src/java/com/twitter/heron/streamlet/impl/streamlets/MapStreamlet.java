@@ -26,26 +26,20 @@ import com.twitter.heron.streamlet.impl.operators.MapOperator;
  * supplied map function to each element of the parent streamlet.
  */
 public class MapStreamlet<R, T> extends StreamletImpl<T> {
-  private StreamletImpl<R> parent;
   private SerializableFunction<? super R, ? extends T> mapFn;
 
   public MapStreamlet(StreamletImpl<R> parent, SerializableFunction<? super R, ? extends T> mapFn) {
-    this.parent = parent;
+    super(parent);
     this.mapFn = mapFn;
     setNumPartitions(parent.getNumPartitions());
   }
 
   @Override
   public boolean doBuild(TopologyBuilder bldr, Set<String> stageNames) {
-    if (getName() == null) {
-      setName(defaultNameCalculator("map", stageNames));
-    }
-    if (stageNames.contains(getName())) {
-      throw new RuntimeException("Duplicate Names");
-    }
+    setDefaultNameIfNone("map", stageNames);
     stageNames.add(getName());
     bldr.setBolt(getName(), new MapOperator<R, T>(mapFn),
-        getNumPartitions()).shuffleGrouping(parent.getName());
+        getNumPartitions()).shuffleGrouping(this.getParent().getName());
     return true;
   }
 }

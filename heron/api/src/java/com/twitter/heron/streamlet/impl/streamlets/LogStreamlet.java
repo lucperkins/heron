@@ -26,24 +26,17 @@ import com.twitter.heron.streamlet.impl.sinks.LogSink;
  * nothing is emitted, thus this streamlet is empty.
  */
 public class LogStreamlet<R> extends StreamletImpl<R> {
-  private StreamletImpl<R> parent;
-
   public LogStreamlet(StreamletImpl<R> parent) {
-    this.parent = parent;
+    super(parent);
     setNumPartitions(parent.getNumPartitions());
   }
 
   @Override
   public boolean doBuild(TopologyBuilder bldr, Set<String> stageNames) {
-    if (getName() == null) {
-      setName(defaultNameCalculator("logger", stageNames));
-    }
-    if (stageNames.contains(getName())) {
-      throw new RuntimeException("Duplicate Names");
-    }
+    setDefaultNameIfNone("logger", stageNames);
     stageNames.add(getName());
     bldr.setBolt(getName(), new LogSink<R>(),
-        getNumPartitions()).shuffleGrouping(parent.getName());
+        getNumPartitions()).shuffleGrouping(this.getParent().getName());
     return true;
   }
 }

@@ -27,26 +27,20 @@ import com.twitter.heron.streamlet.impl.sinks.ComplexSink;
  * by the user passed consumer function, nothing is emitted, thus this streamlet is empty.
  */
 public class SinkStreamlet<R> extends StreamletImpl<R> {
-  private StreamletImpl<R> parent;
   private Sink<R> sink;
 
   public SinkStreamlet(StreamletImpl<R> parent, Sink<R> sink) {
-    this.parent = parent;
+    super(parent);
     this.sink = sink;
     setNumPartitions(parent.getNumPartitions());
   }
 
   @Override
   public boolean doBuild(TopologyBuilder bldr, Set<String> stageNames) {
-    if (getName() == null) {
-      setName(defaultNameCalculator("sink", stageNames));
-    }
-    if (stageNames.contains(getName())) {
-      throw new RuntimeException("Duplicate Names");
-    }
+    setDefaultNameIfNone("sink", stageNames);
     stageNames.add(getName());
     bldr.setBolt(getName(), new ComplexSink<>(sink),
-        getNumPartitions()).shuffleGrouping(parent.getName());
+        getNumPartitions()).shuffleGrouping(this.getParent().getName());
     return true;
   }
 }

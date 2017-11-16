@@ -75,6 +75,15 @@ public abstract class StreamletImpl<R> implements Streamlet<R> {
   protected int nPartitions;
   private List<StreamletImpl<?>> children;
   private boolean built;
+  private StreamletImpl<?> parent;
+
+  protected StreamletImpl(StreamletImpl<?> parent) {
+    this.parent = parent;
+  }
+
+  protected StreamletImpl<?> getParent() {
+    return parent;
+  }
 
   public boolean isBuilt() {
     return built;
@@ -114,6 +123,17 @@ public abstract class StreamletImpl<R> implements Streamlet<R> {
     }
     this.name = sName;
     return this;
+  }
+
+  protected void setDefaultNameIfNone(String prefix, Set<String> stageNames) {
+    if (getName() == null) {
+      this.name = defaultNameCalculator(prefix, stageNames);
+    } else {
+      if (stageNames.contains(getName())) {
+        throw new RuntimeException("Duplicate Names");
+      }
+      this.name = getName();
+    }
   }
 
   /**
