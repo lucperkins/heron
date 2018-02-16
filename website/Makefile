@@ -1,6 +1,7 @@
-HERONPY_VERSION = $(shell python -c "import yaml; print yaml.load(open('config.yaml', 'r'))['params']['versions']['heronpy']")
-FIREBASE_PROJECT := heron-website
-FIREBASE := node_modules/.bin/firebase
+HERONPY_VERSION             := $(shell python -c "import yaml; print yaml.load(open('config.yaml', 'r'))['params']['versions']['heronpy']")
+FIREBASE_PROJECT_PRODUCTION := heron-website
+FIREBASE_PROJECT_STAGING    := heron-website-staging
+FIREBASE_DEPLOY             := node_modules/.bin/firebase deploy --only hosting --token $(FIREBASE_TOKEN)
 
 setup:
 	scripts/setup.sh
@@ -47,7 +48,7 @@ travis-site:
 	@make pages
 
 firebase-deploy: site
-	$(FIREBASE) deploy \
-		--only hosting \
-		--token $(FIREBASE_TOKEN) \
-		--project $(FIREBASE_PROJECT)
+	$(FIREBASE_DEPLOY) --project $(FIREBASE_PROJECT_PRODUCTION)
+
+firebase-deploy-staging: site
+	$(FIREBASE_DEPLOY) --project $(FIREBASE_PROJECT_STAGING)
