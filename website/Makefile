@@ -1,4 +1,6 @@
 HERONPY_VERSION = $(shell python -c "import yaml; print yaml.load(open('config.yaml', 'r'))['params']['versions']['heronpy']")
+FIREBASE_PROJECT := heron-website
+FIREBASE := node_modules/.bin/firebase
 
 setup:
 	scripts/setup.sh
@@ -43,3 +45,9 @@ travis-site:
 	@scripts/javadocs.sh --travis
 	@make python-docs
 	@make pages
+
+firebase-deploy: site
+	$(FIREBASE) deploy \
+		--only hosting \
+		--token $(FIREBASE_TOKEN) \
+		--project $(FIREBASE_PROJECT)
