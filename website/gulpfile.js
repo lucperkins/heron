@@ -6,7 +6,8 @@ const gulp     = require("gulp"),
       del      = require("del");
 
 const SRCS = {
-  sass: 'assets/sass/**/*.scss',
+  sass: 'assets/sass/style.scss',
+  sassWatch: 'assets/sass/**/*.scss',
   js: 'assets/js/app.js',
   hash: 'hash.json'
 }
@@ -22,11 +23,11 @@ const sassConfig = {
 
 const prefixerConfig = {
   browsers: ['last 2 versions'],
-	cascade: false
+  cascade: false
 }
 
 gulp.task('sass', (done) => {
-  del([`${DIST.css}/style-*.css`]);
+  del(['css/style-*.css']);
 
   gulp.src(SRCS.sass)
     .pipe(sass(sassConfig).on('error', sass.logError))
@@ -39,11 +40,11 @@ gulp.task('sass', (done) => {
 });
 
 gulp.task('sass:watch', () => {
-  gulp.watch(SRCS.sass, gulp.series('sass'));
+  gulp.watch(SRCS.sassWatch, gulp.series('sass'));
 });
 
 gulp.task('js', (done) => {
-  del([`${DIST.js}/app-*.js`]);
+  del(['/js/app-*.js']);
 
   gulp.src(SRCS.js)
     .pipe(hash())
