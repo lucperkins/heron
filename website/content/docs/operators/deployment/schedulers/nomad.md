@@ -115,7 +115,7 @@ $ ~/.heron/bin/heron-apiserver \
 
 You can also run the API server in Nomad itself, but you will need to have a local copy of the Heron API server executable on every machine in the cluster. Here's an example Nomad job for the API server:
 
-```hcl
+```
 job "apiserver" {
   datacenters = ["dc1"]
   type = "service"
