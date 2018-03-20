@@ -26,16 +26,6 @@ const prefixerConfig = {
 }
 
 gulp.task('sass', (done) => {
-  del(['static/css/style-*.css']);
-
-  gulp.src(SRCS.sass)
-    .pipe(sass(sassConfig).on('error', sass.logError))
-    .pipe(prefixer(prefixerConfig))
-    .pipe(gulp.dest(DIST.css));
-  done();
-});
-
-gulp.task('sass-dev', (done) => {
   del([`${DIST.css}/style-*.css`]);
 
   gulp.src(SRCS.sass)
@@ -49,17 +39,10 @@ gulp.task('sass-dev', (done) => {
 });
 
 gulp.task('sass:watch', () => {
-  gulp.watch(SRCS.sass, gulp.series('sass-dev'));
+  gulp.watch(SRCS.sass, gulp.series('sass'));
 });
 
 gulp.task('js', (done) => {
-  gulp.src(SRCS.js)
-    .pipe(gulp.dest(DIST.js));
-
-  done();
-});
-
-gulp.task('js-dev', (done) => {
   del([`${DIST.js}/app-*.js`]);
 
   gulp.src(SRCS.js)
@@ -71,9 +54,9 @@ gulp.task('js-dev', (done) => {
 });
 
 gulp.task('js:watch', () => {
-  gulp.watch(SRCS.js, gulp.series('js-dev'));
+  gulp.watch(SRCS.js, gulp.series('js'));
 });
 
 gulp.task('build', gulp.series('sass', 'js'));
 
-gulp.task('dev', gulp.series('sass-dev', 'js-dev', gulp.parallel('sass:watch', 'js:watch')));
+gulp.task('dev', gulp.series('build', gulp.parallel('sass:watch', 'js:watch')));
